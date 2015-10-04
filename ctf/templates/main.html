@@ -1,0 +1,95 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-8">
+            <h2>Scoreboard</h2>
+            <table class="table table-striped">
+                <tr>
+                    <th>rank</th>
+                    <th>Player</th>
+                    {% for stage in stages %}
+                    <th class="stage">{{ stage.title }}</th>
+                    {% endfor %}
+                    <th style="text-align: right">Total</th>
+                </tr>
+                {% for player in players %}
+                <tr>
+                    <td>{{ forloop.counter }}</td>
+                    <td>{{ player.user.username }}</td>
+                    {% for stage in stages %}
+                        {% if stage in player.cleared_stages.all %}
+                        <td class="stage cleared">{{ stage.title }}</td>
+                        {% else %}
+                        <td class="stage">{{ stage.title }}</td>
+                        {% endif %}
+                    {% endfor %}
+                    <td style="text-align: right">{{ player.cleared_stages.count }}</td>
+                </tr>
+                {% endfor %}
+            </table>
+        </div>
+        <div class="col-md-4">
+            {% if user.is_authenticated %}
+            <h2>Status</h2>
+            <table class="table" style="text-align: center; margin-bottom: 0">
+                <tr>
+                    {% for stage in stages %}
+                        {% if stage in user.participant.cleared_stages.all %}
+                        <td class="stage cleared">{{ stage.title }}</td>
+                        {% else %}
+                        <td class="stage">{{ stage.title }}</td>
+                        {% endif %}
+                    {% endfor %}
+                </tr>
+            </table>
+            <form method="POST" action="submit">
+                {% csrf_token %}
+                <div class="input-group">
+                    <input required type="text" class="form-control" name="flag" placeholder="Enter flag here">
+                    <span class="input-group-btn">
+                        <input type="submit" value="Submit" class="btn btn-success" />
+                    </span>
+                </div>
+            </form>
+            {% else %}
+            <h2>Login</h2>
+            {% if msg == 'err_login' %}
+            <div class="alert alert-danger" role="alert">Login failed.</div>
+            {% endif %}
+            <form method="POST" action="login">
+              {% csrf_token %}
+              <div class="form-group">
+                <input required type="text" class="form-control" name="username" placeholder="Username">
+              </div>
+              <div class="form-group">
+                <input required type="password" class="form-control" name="password" placeholder="Password">
+              </div>
+              <input type="submit" value="Login" class="btn btn-success" />
+              <span style="font-size: 20px">&nbsp;, or you can</span>
+            </form>
+
+            <h2>Register</h2>
+            {% if msg == 'err_already' %}
+            <div class="alert alert-danger" role="alert">Username already exist.</div>
+            {% elif msg == 'err_checkps' %}
+            <div class="alert alert-danger" role="alert">Wrong password.</div>
+            {% endif %}
+            <form method="POST" action="register">
+              {% csrf_token %}
+              <div class="form-group">
+                <input required type="text" class="form-control" name="username" placeholder="Username">
+              </div>
+              <div class="form-group">
+                <input required type="password" class="form-control" name="password1" placeholder="Password">
+              </div>
+              <div class="form-group">
+                <input required type="password" class="form-control" name="password2" placeholder="Password Again">
+              </div>
+              <input type="submit" value="Register" class="btn btn-success" />
+            </form>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
