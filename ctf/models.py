@@ -18,6 +18,9 @@ class Participant(models.Model):
     cleared_stages = models.ManyToManyField(Stage, blank=True)
     submit_time = models.DateTimeField(auto_now=True)
 
+    def __str__(self):
+        return self.user.username
+
 def create_participant(sender, instance, created, **kwargs):
     if created:
         Participant.objects.create(user=instance)
