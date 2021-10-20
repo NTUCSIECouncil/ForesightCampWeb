@@ -1,20 +1,21 @@
 <!DOCTYPE HTML>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title></title>
-    <script src="//code.jquery.com/jquery-1.11.3.min.js"></script>
-    <!--<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css"> -->
+  <meta charset="UTF-8">
+  <title>2021 ForesightCamp</title>
+  <script src="//code.jquery.com/jquery-1.11.3.min.js"></script>
   <link rel="stylesheet" href="https://bootswatch.com/4/darkly/bootstrap.min.css">
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
-    <style type="text/css">
-        .stage {
-            text-align: center;
-        }
-        .cleared {
-            background-color: #00bc8c;
-        }
-    </style>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+  <link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/jquery-jgrowl/1.4.8/jquery.jgrowl.min.css" />
+  <script src="//cdnjs.cloudflare.com/ajax/libs/jquery-jgrowl/1.4.8/jquery.jgrowl.min.js"></script>
+  <style type="text/css">
+    .stage {
+        text-align: center;
+    }
+    .cleared {
+        background-color: #00bc8c;
+    }
+  </style>
 </head>
 <body>
 <nav class="navbar navbar-default">
@@ -22,20 +23,37 @@
     <!-- Brand and toggle get grouped for better mobile display -->
     <div class="navbar-header">
       <a class="navbar-brand" href="/">Foresight Camp</a>
+      {% if user.is_authenticated %}
+      <a href="{% url 'logout' %}">Logout</a>
+      {% endif %}
+      <span id="time", style="color: #00bc8c; padding: 5px">
+        <span id="hour">00</span>
+        <span>:</span>
+        <span id="minute">00</span>
+        <span>:</span>
+        <span id="second">00</span>
+      </span>
+      {% load static %}
+      <script src="{% static '/script/time.js' %}"></script>
     </div>
-
-    <!-- Collect the nav links, forms, and other content for toggling -->
-    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-      <ul class="nav navbar-nav navbar-right">
-        {% if user.is_authenticated %}
-        <li><a href="#">{{ user.username }}</a></li>
-        <li><a href="{% url 'logout' %}">Logout</a></li>
-        {% endif %}
-      </ul>
-    </div><!-- /.navbar-collapse -->
-  </div><!-- /.container-fluid -->
+  </div>
 </nav>
 {% block content %}
 {% endblock %}
+
+{% if user.is_authenticated%}
+<script>
+  const socket = new WebSocket(
+    'ws://'
+    + window.location.host
+    + '/ws/'
+  );
+  
+  socket.onmessage = function(e) {
+    data = JSON.parse(e.data);
+    $.jGrowl(data.message);
+  };
+</script>
+{% endif %}
 </body>
 </html>

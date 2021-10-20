@@ -4,7 +4,9 @@ from django.contrib.auth import authenticate, login, logout
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect
+from datetime import datetime
 from .models import *
+from .consumer import *
 
 # Create your views here.
 def register_view(request):
@@ -38,16 +40,26 @@ def logout_view(request):
 
 @login_required
 def submit_view(request):
+    if datetime.now() > datetime(2021, 10, 31, 22, 0):
+       return HttpResponseRedirect('/?msg=err_submit')
     flag = request.POST['flag']
     stage = Stage.objects.filter(flag=flag)
     if stage.count() > 0:
         stage = stage[0]
+        if request.user.participant.cleared_stages.filter(flag=stage.flag).count() > 0:
+            return HttpResponseRedirect('/?msg=already_submitted')
         request.user.participant.cleared_stages.add(stage)
-    
+        return HttpResponseRedirect('/?msg=right_flag')
+    else:
+        return HttpResponseRedirect('/?msg=wrong_flag')
     return HttpResponseRedirect('/')
 
 def main_page(request):
     stages = Stage.objects.all()
     players = Participant.objects.all().annotate(score=Count('cleared_stages')).order_by('-score', 'submit_time')
-    msg = request.GET.get('msg', '');
-    return render(request, 'main.html', {'msg': msg, 'stages': stages, 'players': players})
+    msg = request.GET.get('msg', '')
+    ret = render(request, 'main.html', {'msg': msg, 'stages': stages, 'players': players})
+    return ret
+
+def stage_view(request, stage_name):
+    return render(request, stage_name)
