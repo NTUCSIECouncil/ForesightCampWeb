@@ -34,5 +34,7 @@ pip3 install -r requirements.txt
 This repository is originally forked from [Tenyoku's foresight_camp_ctf repository] (https://github.com/Tenyoku8478/foresight_camp_ctf) and [NTUCSIECouncil/ForesightCampWeb](https://github.com/NTUCSIECouncil/ForesightCampWeb)
 
 ### References
+
 Django (https://docs.djangoproject.com/en/3.2/)
+
 Channels (https://channels.readthedocs.io/en/stable/index.html)
