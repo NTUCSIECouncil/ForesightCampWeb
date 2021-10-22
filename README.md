@@ -5,7 +5,7 @@
 
 ```shell
 # Step 1 : Clone the repo
-git clone 
+git clone git@github.com:vppyw/ForesightCampWeb.git
 # Step 2 : Setup python ( you may skip this step if the environment is set up )
 sudo apt-get install python3-pip
 python3 -m pip install -U pip
@@ -27,11 +27,13 @@ pip3 install -r requirements.txt
 	Log in the backstage as administrator and revise flag
 
 	Be sure to change adminstration's password before start it !!!
-
+    ```shell
+    ./manager.py changepassword admin
+    ```
 
 ### Acknowledgement
 
-This repository is originally forked from [Tenyoku's foresight_camp_ctf repository] (https://github.com/Tenyoku8478/foresight_camp_ctf) and [NTUCSIECouncil/ForesightCampWeb](https://github.com/NTUCSIECouncil/ForesightCampWeb)
+This repository is originally forked from [Tenyoku's foresight_camp_ctf repository](https://github.com/Tenyoku8478/foresight_camp_ctf) and [NTUCSIECouncil/ForesightCampWeb](https://github.com/NTUCSIECouncil/ForesightCampWeb)
 
 ### References
 
