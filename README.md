@@ -19,7 +19,7 @@ pip3 install -r requirements.txt
 
    ```shell
    docker run -p 6379:6379 -d redis:5
-   ./manage.py runserver <ip or domain-name>:<port>
+   ./manage.py runserver <ip or domain-name>:<port> --insecure
    ```
 
 2. Management

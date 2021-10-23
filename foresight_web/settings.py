@@ -98,4 +98,4 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 
-STATIC_URL = '/ctf/static/'
+STATIC_URL = '/static/'
