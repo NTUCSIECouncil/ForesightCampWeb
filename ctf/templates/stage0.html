@@ -5,7 +5,8 @@
   <h3>Type your problem name here.</h3>
   <p>Type your discribe here.</p>
   
-  <a download>Put download file here.</a>
+  {% load static %}
+  <a href="{% static 'src/download.txt' %}" download>Put download file here.</a>
 </div>
 {% else %}
 <div style="padding: 40px">

@@ -40,19 +40,22 @@ def logout_view(request):
 
 @login_required
 def submit_view(request):
+    stages = Stage.objects.all()
+    players = Participant.objects.all().annotate(score=Count('cleared_stages')).order_by('-score', 'submit_time')
+    msg = request.GET.get('msg', '')
     if datetime.now() > datetime(2021, 10, 31, 22, 0):
-       return HttpResponseRedirect('/?msg=err_submit')
+        return render(request, 'main.html', {'msg': msg, 'stages': stages, 'players': players, 'submit': 'err_submit'})
     flag = request.POST['flag']
     stage = Stage.objects.filter(flag=flag)
     if stage.count() > 0:
         stage = stage[0]
         if request.user.participant.cleared_stages.filter(flag=stage.flag).count() > 0:
-            return HttpResponseRedirect('/?msg=already_submitted')
-        request.user.participant.cleared_stages.add(stage)
-        return HttpResponseRedirect('/?msg=right_flag')
+            return render(request, 'main.html', {'msg': msg, 'stages': stages, 'players': players, 'submit': 'already_submitted'})
+        else:
+            request.user.participant.cleared_stages.add(stage)
+            return render(request, 'main.html', {'msg': msg, 'stages': stages, 'players': players, 'submit': 'right_flag'})
     else:
-        return HttpResponseRedirect('/?msg=wrong_flag')
-    return HttpResponseRedirect('/')
+        return render(request, 'main.html', {'msg': msg, 'stages': stages, 'players': players, 'submit': 'wrong_flag'})
 
 def main_page(request):
     stages = Stage.objects.all()
